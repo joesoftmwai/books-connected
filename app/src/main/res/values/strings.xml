@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">Books</string>
     <string name="error_loading_data">Error loading data ...</string>
+    <string name="title">Title</string>
+    <string name="author">Author</string>
+    <string name="publisher">Publisher</string>
+    <string name="publishing_date">Publishing Date</string>
+    <string name="search">Search</string>
+    <string name="search_hint">Search…</string>
 </resources>

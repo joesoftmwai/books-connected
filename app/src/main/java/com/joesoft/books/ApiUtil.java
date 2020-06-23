@@ -3,11 +3,16 @@ package com.joesoft.books;
 import android.net.Uri;
 import android.util.Log;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class ApiUtil {
@@ -63,6 +68,49 @@ public class ApiUtil {
         } finally {
             connection.disconnect();
         }
+    }
+
+    public static ArrayList<Book> getBooksFromJson(String json) {
+        final String ID = "id";
+        final String TITLE = "title";
+        final String SUBTITLE = "subtitle";
+        final String AUTHORS = "authors";
+        final String PUBLISHER = "publisher";
+        final String PUBLISHED_DATE = "publishedDate";
+        final String ITEMS = "items";
+        final String VOLUME_INFO = "volumeInfo";
+
+
+        ArrayList<Book> books = new ArrayList<>();
+        try {
+            JSONObject jsonBooks = new JSONObject(json);
+            JSONArray arrayBooks = jsonBooks.getJSONArray(ITEMS);
+            int noOfBooks = arrayBooks.length();
+            for (int i = 0; i < noOfBooks; i++) {
+                JSONObject bookJSON = arrayBooks.getJSONObject(i);
+                JSONObject volumeInfoJSON = bookJSON.getJSONObject(VOLUME_INFO);
+                int noOfAuthors = volumeInfoJSON.getJSONArray(AUTHORS).length();
+                String[] authors = new String[noOfAuthors];
+                for (int j = 0; j < noOfAuthors; j++) {
+                    authors[j] = volumeInfoJSON.getJSONArray(AUTHORS).get(j).toString();
+                }
+
+                Book book = new Book(
+                        bookJSON.getString(ID),
+                        volumeInfoJSON.getString(TITLE),
+                        (volumeInfoJSON.isNull(SUBTITLE) ? "" : volumeInfoJSON.getString(SUBTITLE)),
+                        authors,
+                        volumeInfoJSON.getString(PUBLISHER),
+                        volumeInfoJSON.getString(PUBLISHED_DATE)
+                );
+
+                books.add(book);
+
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return books;
     }
 
 }

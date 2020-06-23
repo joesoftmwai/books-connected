@@ -1,32 +1,76 @@
 package com.joesoft.books;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.core.view.MenuItemCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.SearchManager;
+import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 
 public class BooksListActivity extends AppCompatActivity {
 
     private static final String TAG = BooksListActivity.class.getSimpleName();
+    private RecyclerView mRecyclerBooks;
+    private LinearLayoutManager mBooksLayoutManager = new LinearLayoutManager(this);
     private ProgressBar mLoadingProgress;
+    private URL mBooksURL;
+    private boolean mIsSearching;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_books_list);
 
+        mRecyclerBooks = findViewById(R.id.recycler_books);
         mLoadingProgress = findViewById(R.id.pb_loading);
 
-        URL booksURL = ApiUtil.buildUrl("cooking");
-        new BooksQueryTask().execute(booksURL);
+        handleSearchIntent(getIntent());
+
+        if (!mIsSearching)
+            mBooksURL = ApiUtil.buildUrl("android");
+            new BooksQueryTask().execute(mBooksURL);
+
     }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        handleSearchIntent(intent);
+    }
+
+    private void handleSearchIntent(Intent intent) {
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            mIsSearching = true;
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            //use the query to search your data somehow
+            try {
+                mBooksURL = ApiUtil.buildUrl(query);
+                new BooksListActivity.BooksQueryTask().execute(mBooksURL);
+            } catch (Exception e) {
+                Log.d(TAG, e.getMessage());
+            }
+            Log.d(TAG, "handleSearchIntent: " + query);
+        }
+    }
+
+
+
 
     public class BooksQueryTask extends AsyncTask<URL, Void, String> {
 
@@ -46,18 +90,22 @@ public class BooksListActivity extends AppCompatActivity {
         // called when the doInBackground has finished executing
         @Override
         protected void onPostExecute(String result) {
-            TextView tvResult = findViewById(R.id.tv_response);
-            TextView tvError = findViewById(R.id.tv_error);
+            TextView textError = findViewById(R.id.tv_error);
             mLoadingProgress.setVisibility(View.INVISIBLE);
             if(result == null) {
-                tvResult.setVisibility(View.INVISIBLE) ;
-                tvError.setVisibility(View.VISIBLE);
+                mRecyclerBooks.setVisibility(View.INVISIBLE) ;
+                textError.setVisibility(View.VISIBLE);
             } else {
-                tvResult.setVisibility(View.VISIBLE) ;
-                tvError.setVisibility(View.INVISIBLE);
+                mRecyclerBooks.setVisibility(View.VISIBLE) ;
+                textError.setVisibility(View.INVISIBLE);
             }
 
-            tvResult.setText(result);
+            final ArrayList<Book> books = ApiUtil.getBooksFromJson(result);
+            mRecyclerBooks.setLayoutManager(mBooksLayoutManager);
+
+            BooksRecyclerAdapter booksRecyclerAdapter = new BooksRecyclerAdapter(books);
+            mRecyclerBooks.setAdapter(booksRecyclerAdapter);
+
         }
 
         // called before
@@ -67,4 +115,23 @@ public class BooksListActivity extends AppCompatActivity {
             super.onPreExecute();
         }
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.book_list_menu, menu);
+
+        SearchManager searchManager =
+                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView =
+                (SearchView) menu.findItem(R.id.action_search).getActionView();
+        searchView.setSearchableInfo(
+                searchManager.getSearchableInfo(getComponentName()));
+
+        return true;
+
+    }
+
+
+
+
 }
