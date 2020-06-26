@@ -7,4 +7,8 @@
     <string name="publishing_date">Publishing Date</string>
     <string name="search">Search</string>
     <string name="search_hint">Search…</string>
+    <string name="subtitle">Subtitle</string>
+    <string name="published_date">Published Date</string>
+    <string name="todo">TODO</string>
+    <string name="detail_desc">Detail Description</string>
 </resources>

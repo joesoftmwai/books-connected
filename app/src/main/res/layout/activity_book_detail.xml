@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="Book"
+            type="com.joesoft.books.Book" />
+    </data>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".BookDetail">
+
+            <TextView
+                android:id="@+id/text_detail_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:text="@{Book.title}"
+                android:textColor="@color/colorAccent"
+                android:textSize="19sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/text_detail_subtitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@{Book.subTitle}"
+                android:textColor="@color/colorPrimary"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="@+id/text_detail_title"
+                app:layout_constraintStart_toStartOf="@+id/text_detail_title"
+                app:layout_constraintTop_toBottomOf="@+id/text_detail_title" />
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="140dp"
+                android:layout_height="115dp"
+                android:imageUrl="@{Book.thumbnail}"
+                app:layout_constraintStart_toStartOf="@+id/text_detail_title"
+                app:layout_constraintTop_toBottomOf="@+id/text_detail_subtitle"
+                app:srcCompat="@drawable/ic_book_cover_placeholder_24dp" />
+
+            <TextView
+                android:id="@+id/text_detail_authors"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@{Book.authors}"
+                android:textColor="@color/colorPrimaryDark"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="@+id/text_detail_subtitle"
+                app:layout_constraintStart_toEndOf="@+id/imageView"
+                app:layout_constraintTop_toBottomOf="@+id/text_detail_subtitle" />
+
+            <TextView
+                android:id="@+id/text_detail_publisher"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@{Book.publisher}"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="@+id/text_detail_authors"
+                app:layout_constraintStart_toStartOf="@+id/text_detail_authors"
+                app:layout_constraintTop_toBottomOf="@+id/text_detail_authors" />
+
+            <TextView
+                android:id="@+id/text_detail_published_date"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@{Book.publishedDate}"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="@+id/text_detail_publisher"
+                app:layout_constraintStart_toStartOf="@+id/text_detail_publisher"
+                app:layout_constraintTop_toBottomOf="@+id/text_detail_publisher" />
+
+            <TextView
+                android:id="@+id/text_detail_description"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@{Book.description}"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="@+id/text_detail_published_date"
+                app:layout_constraintStart_toStartOf="@+id/imageView"
+                app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</layout>
