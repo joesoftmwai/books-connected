@@ -11,4 +11,11 @@
     <string name="published_date">Published Date</string>
     <string name="todo">TODO</string>
     <string name="detail_desc">Detail Description</string>
+    <string name="no_search_data">Please insert valid search terms</string>
+
+    <string name="hint_title">Insert tittle</string>
+    <string name="hint_authors">Insert author(s)</string>
+    <string name="hint_publisher">Insert publisher</string>
+    <string name="hint_ISBN">Insert ISBN</string>
+    <string name="advanced_search">Advanced Search</string>
 </resources>
